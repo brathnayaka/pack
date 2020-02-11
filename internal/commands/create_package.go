@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
@@ -20,7 +21,15 @@ type CreatePackageFlags struct {
 	NoPull          bool
 }
 
-func CreatePackage(logger logging.Logger, client PackClient) *cobra.Command {
+type PackageConfigReader interface {
+	Read(path string) (buildpackage.Config, error)
+}
+
+type PackageCreator interface {
+	CreatePackage(ctx context.Context, options pack.CreatePackageOptions) error
+}
+
+func CreatePackage(logger logging.Logger, client PackageCreator, packageConfigReader PackageConfigReader) *cobra.Command {
 	var flags CreatePackageFlags
 	ctx := createCancellableContext()
 	cmd := &cobra.Command{
@@ -28,7 +37,7 @@ func CreatePackage(logger logging.Logger, client PackClient) *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Short: "Create package",
 		RunE: logError(logger, func(cmd *cobra.Command, args []string) error {
-			config, err := ReadPackageConfig(flags.PackageTomlPath)
+			config, err := packageConfigReader.Read(flags.PackageTomlPath)
 			if err != nil {
 				return errors.Wrap(err, "reading config")
 			}
