@@ -11,7 +11,7 @@ import (
 	"github.com/sclevine/spec/report"
 	"github.com/spf13/cobra"
 
-	"github.com/buildpacks/pack/internal/buildpackage"
+	pubbldpkg "github.com/buildpacks/pack/buildpackage"
 	"github.com/buildpacks/pack/internal/commands"
 	"github.com/buildpacks/pack/internal/commands/commands_fakes"
 	"github.com/buildpacks/pack/internal/dist"
@@ -49,7 +49,7 @@ func testCreatePackageCommand(t *testing.T, when spec.G, it spec.S) {
 			createPackageCommand := createPackageCommand(
 				withLogger(logging.NewLogWithWriters(outBuf, outBuf)),
 				withConfigReader(
-					commands_fakes.NewFakePackageConfigReader(whereReadReturns(buildpackage.Config{}, expectedErr)),
+					commands_fakes.NewFakePackageConfigReader(whereReadReturns(pubbldpkg.Config{}, expectedErr)),
 				),
 			)
 
@@ -78,7 +78,7 @@ func testCreatePackageCommand(t *testing.T, when spec.G, it spec.S) {
 		it("creates package with config returned by the reader", func() {
 			fakePackageCreator := &commands_fakes.FakePackageCreator{}
 
-			myConfig := buildpackage.Config{
+			myConfig := pubbldpkg.Config{
 				Buildpack: dist.BuildpackURI{URI: "test"},
 			}
 
@@ -158,7 +158,7 @@ func withConfigPath(path string) packageCommandOption {
 	}
 }
 
-func whereReadReturns(config buildpackage.Config, err error) func(*commands_fakes.FakePackageConfigReader) {
+func whereReadReturns(config pubbldpkg.Config, err error) func(*commands_fakes.FakePackageConfigReader) {
 	return func(r *commands_fakes.FakePackageConfigReader) {
 		r.ReadReturnConfig = config
 		r.ReadReturnError = err

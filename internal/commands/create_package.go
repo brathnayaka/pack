@@ -2,15 +2,11 @@ package commands
 
 import (
 	"context"
-	"path/filepath"
-
-	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/buildpacks/pack"
-	"github.com/buildpacks/pack/internal/buildpackage"
-	"github.com/buildpacks/pack/internal/paths"
+	pubbldpkg "github.com/buildpacks/pack/buildpackage"
 	"github.com/buildpacks/pack/internal/style"
 	"github.com/buildpacks/pack/logging"
 )
@@ -22,7 +18,7 @@ type CreatePackageFlags struct {
 }
 
 type PackageConfigReader interface {
-	Read(path string) (buildpackage.Config, error)
+	Read(path string) (pubbldpkg.Config, error)
 }
 
 type PackageCreator interface {
@@ -68,38 +64,4 @@ func CreatePackage(logger logging.Logger, client PackageCreator, packageConfigRe
 	cmd.Hidden = true
 
 	return cmd
-}
-
-func ReadPackageConfig(path string) (buildpackage.Config, error) {
-	config := buildpackage.Config{}
-
-	configDir, err := filepath.Abs(filepath.Dir(path))
-	if err != nil {
-		return config, err
-	}
-
-	_, err = toml.DecodeFile(path, &config)
-	if err != nil {
-		return config, errors.Wrapf(err, "reading config %s", path)
-	}
-
-	absPath, err := paths.ToAbsolute(config.Buildpack.URI, configDir)
-	if err != nil {
-		return config, errors.Wrapf(err, "getting absolute path for %s", style.Symbol(config.Buildpack.URI))
-	}
-	config.Buildpack.URI = absPath
-
-	for i := range config.Dependencies {
-		uri := config.Dependencies[i].URI
-		if uri != "" {
-			absPath, err := paths.ToAbsolute(uri, configDir)
-			if err != nil {
-				return config, errors.Wrapf(err, "getting absolute path for %s", style.Symbol(uri))
-			}
-
-			config.Dependencies[i].URI = absPath
-		}
-	}
-
-	return config, nil
 }

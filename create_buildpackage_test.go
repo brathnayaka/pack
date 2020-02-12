@@ -14,8 +14,8 @@ import (
 	"github.com/sclevine/spec/report"
 
 	"github.com/buildpacks/pack"
+	pubbldpkg "github.com/buildpacks/pack/buildpackage"
 	"github.com/buildpacks/pack/internal/api"
-	"github.com/buildpacks/pack/internal/buildpackage"
 	"github.com/buildpacks/pack/internal/dist"
 	ifakes "github.com/buildpacks/pack/internal/fakes"
 	"github.com/buildpacks/pack/internal/image"
@@ -77,7 +77,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 			h.AssertNil(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 				Name: nestedPackage.Name(),
-				Config: buildpackage.Config{
+				Config: pubbldpkg.Config{
 					Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 						API:    api.MustParse("0.2"),
 						Info:   dist.BuildpackInfo{ID: "bp.nested", Version: "2.3.4"},
@@ -115,7 +115,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 				h.AssertNil(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 					Name: packageImage.Name(),
-					Config: buildpackage.Config{
+					Config: pubbldpkg.Config{
 						Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 							API:    api.MustParse("0.2"),
 							Info:   dist.BuildpackInfo{ID: "bp.1", Version: "1.2.3"},
@@ -136,7 +136,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 				h.AssertNil(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 					Name: packageImage.Name(),
-					Config: buildpackage.Config{
+					Config: pubbldpkg.Config{
 						Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 							API:    api.MustParse("0.2"),
 							Info:   dist.BuildpackInfo{ID: "bp.1", Version: "1.2.3"},
@@ -157,7 +157,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 				h.AssertNil(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 					Name: packageImage.Name(),
-					Config: buildpackage.Config{
+					Config: pubbldpkg.Config{
 						Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 							API:    api.MustParse("0.2"),
 							Info:   dist.BuildpackInfo{ID: "bp.1", Version: "1.2.3"},
@@ -177,7 +177,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 				h.AssertError(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 					Name: "some/package",
-					Config: buildpackage.Config{
+					Config: pubbldpkg.Config{
 						Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 							API:    api.MustParse("0.2"),
 							Info:   dist.BuildpackInfo{ID: "bp.1", Version: "1.2.3"},
@@ -199,7 +199,7 @@ func testCreatePackage(t *testing.T, when spec.G, it spec.S) {
 
 			h.AssertError(t, subject.CreatePackage(context.TODO(), pack.CreatePackageOptions{
 				Name: "",
-				Config: buildpackage.Config{
+				Config: pubbldpkg.Config{
 					Buildpack: dist.BuildpackURI{URI: createBuildpack(dist.BuildpackDescriptor{
 						API:    api.MustParse("0.2"),
 						Info:   dist.BuildpackInfo{ID: "bp.1", Version: "1.2.3"},

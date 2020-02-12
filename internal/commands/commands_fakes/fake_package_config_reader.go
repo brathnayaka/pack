@@ -1,16 +1,16 @@
 package commands_fakes
 
 import (
-	"github.com/buildpacks/pack/internal/buildpackage"
+	pubbldpkg "github.com/buildpacks/pack/buildpackage"
 )
 
 type FakePackageConfigReader struct {
 	ReadCalledWithArg string
-	ReadReturnConfig  buildpackage.Config
+	ReadReturnConfig  pubbldpkg.Config
 	ReadReturnError   error
 }
 
-func (r *FakePackageConfigReader) Read(path string) (buildpackage.Config, error) {
+func (r *FakePackageConfigReader) Read(path string) (pubbldpkg.Config, error) {
 	r.ReadCalledWithArg = path
 
 	return r.ReadReturnConfig, r.ReadReturnError
@@ -18,7 +18,7 @@ func (r *FakePackageConfigReader) Read(path string) (buildpackage.Config, error)
 
 func NewFakePackageConfigReader(ops ...func(*FakePackageConfigReader)) *FakePackageConfigReader {
 	fakePackageConfigReader := &FakePackageConfigReader{
-		ReadReturnConfig: buildpackage.Config{},
+		ReadReturnConfig: pubbldpkg.Config{},
 		ReadReturnError:  nil,
 	}
 
