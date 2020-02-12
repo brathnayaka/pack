@@ -1,0 +1,5 @@
+[buildpack]
+uri = "noop-buildpack.tgz"
+
+[[dependencies]]
+image = "some/package-dep"
